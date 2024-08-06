@@ -1,9 +1,9 @@
 'use client';
 
-import { ClientSideSuspense, RoomProvider } from '@liveblocks/react/suspense'
-import { Editor } from '@/components/editor/Editor'
-import Header from '@/components/Header'
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
+import { ClientSideSuspense, RoomProvider } from '@liveblocks/react/suspense';
+import { Editor } from '@/components/editor/Editor';
+import Header from '@/components/Header';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 import ActiveCollaborators from './ActiveCollaborators';
 import { useEffect, useRef, useState } from 'react';
 import { Input } from './ui/input';
@@ -18,7 +18,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
   const [loading, setLoading] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);  // Fixed: Changed to HTMLInputElement
 
   const updateTitleHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -38,7 +38,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
 
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -46,21 +46,20 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
         setEditing(false);
         updateDocument(roomId, documentTitle);
       }
-    }
+    };
 
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [roomId, documentTitle])
+    };
+  }, [roomId, documentTitle]);
 
   useEffect(() => {
     if (editing && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [editing])
-
+  }, [editing]);
 
   return (
     <RoomProvider id={roomId}>
@@ -72,11 +71,11 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
                 <Input
                   type="text"
                   value={documentTitle}
-                  ref={inputRef}
+                  ref={inputRef}  // Using the corrected ref type
                   placeholder="Enter title"
                   onChange={(e) => setDocumentTitle(e.target.value)}
                   onKeyDown={updateTitleHandler}
-                  disable={!editing}
+                  disabled={!editing}  // Fixed: Corrected prop name from `disable` to `disabled`
                   className="document-title-input"
                 />
               ) : (
@@ -124,7 +123,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: Col
         </div>
       </ClientSideSuspense>
     </RoomProvider>
-  )
-}
+  );
+};
 
-export default CollaborativeRoom
+export default CollaborativeRoom;
